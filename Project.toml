@@ -1,12 +1,12 @@
-name = "AlgebraicTemplate"
-uuid = "b66562e1-fa90-4e8b-9505-c909188fab76"
+name = "CategoricalTensorNetworks"
+uuid = "b369e0ec-beea-4e3a-b4d0-cd2e7e44da01"
 license = "MIT"
-authors = ["AlgebraicJulia Developer <email@algebraicjulia.org>"]
+authors = ["Evan Patterson <evan@epatters.org>"]
 version = "0.0.1"
 
 [deps]
 Catlab = "134e5e36-593f-5add-ad60-77f754baafbe"
 
 [compat]
-Catlab = "^0.14"
-julia = "1.6"
+Catlab = "^0.16"
+julia = "1.9"

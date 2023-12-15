@@ -1,6 +1,6 @@
 using Test
 
-using AlgebraicTemplate
+using CategoricalTensorNetworks
 
 @testset "Core" begin
   include("core.jl")

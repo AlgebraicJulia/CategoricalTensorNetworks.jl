@@ -1,7 +1,7 @@
-# AlgebraicTemplate.jl
+# CategoricalTensorNetworks.jl
 
 ```@meta
-CurrentModule = AlgebraicTemplate
+CurrentModule = CategoricalTensorNetworks
 ```
 
-`AlgebraicTemplate.jl` is a Julia library for...
+`CategoricalTensorNetworks.jl` is a Julia library for...
