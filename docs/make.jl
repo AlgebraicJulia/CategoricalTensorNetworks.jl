@@ -42,7 +42,6 @@ makedocs(
   pages=Any[
     "CategoricalTensorNetworks.jl"=>"index.md",
     "Examples"=>Any[
-      "generated/literate_example.md",
     ],
     "Library Reference"=>"api.md",
   ]
