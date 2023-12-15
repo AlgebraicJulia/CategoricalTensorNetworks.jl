@@ -1,3 +1,5 @@
 [deps]
 CategoricalTensorNetworks = "b369e0ec-beea-4e3a-b4d0-cd2e7e44da01"
+Catlab = "134e5e36-593f-5add-ad60-77f754baafbe"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

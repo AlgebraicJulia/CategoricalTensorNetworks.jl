@@ -1,7 +1,5 @@
 using Test
 
-using CategoricalTensorNetworks
-
-@testset "Core" begin
-  include("core.jl")
+@testset "TensorNetworkAlgebras" begin
+  include("TensorNetworkAlgebras.jl")
 end
