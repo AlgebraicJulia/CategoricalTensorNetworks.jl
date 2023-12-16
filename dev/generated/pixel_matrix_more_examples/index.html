@@ -16,17 +16,17 @@ R1_mat = FinRelation(Matrix{BoolRig}(
 ticks = range(1, dim, length=5)
 ticklabels = range(-3, 3, length=length(ticks))
 plot_rel(R1_mat.rel, title=&quot;Equation 1&quot;, xlabel=&quot;x&quot;, ylabel=&quot;z&quot;,
-         size=(300,300), lims=(0,dim), ticks=(ticks,ticklabels))</code></pre><img src="bf2f1c3d.svg" alt="Example block output"/><p>$ R_2(w; y) \iff \cosh(w + 10^{-3} y) + y + 10^{-4} w = 2 $</p><pre><code class="language-julia hljs">R2_mat = FinRelation(Matrix{BoolRig}(
+         size=(300,300), lims=(0,dim), ticks=(ticks,ticklabels))</code></pre><img src="e16962b3.svg" alt="Example block output"/><p>$ R_2(w; y) \iff \cosh(w + 10^{-3} y) + y + 10^{-4} w = 2 $</p><pre><code class="language-julia hljs">R2_mat = FinRelation(Matrix{BoolRig}(
   @. abs(cosh(w&#39; + 10^-3 * y) + y + 10^-4 * w&#39; - 2) &lt; ϵ
 ))
 
 plot_rel(R2_mat.rel, title=&quot;Equation 2&quot;, xlabel=&quot;w&quot;, ylabel=&quot;y&quot;,
-         size=(300,300), lims=(0,dim), ticks=(ticks,ticklabels))</code></pre><img src="f549722f.svg" alt="Example block output"/><p>$ R_3(x; y) \iff \tan(x+y) (x-2)^{-1} (x+3)^{-1} y^{-2} = 1 $</p><pre><code class="language-julia hljs">R3_mat = FinRelation(Matrix{BoolRig}(
+         size=(300,300), lims=(0,dim), ticks=(ticks,ticklabels))</code></pre><img src="37df83eb.svg" alt="Example block output"/><p>$ R_3(x; y) \iff \tan(x+y) (x-2)^{-1} (x+3)^{-1} y^{-2} = 1 $</p><pre><code class="language-julia hljs">R3_mat = FinRelation(Matrix{BoolRig}(
   @. abs(tan(x&#39;+y) / (x&#39;-2) / (x&#39;+3) / y^2 - 1) &lt; ϵ
 ))
 
 plot_rel(R3_mat.rel, title=&quot;Equation 3&quot;, xlabel=&quot;x&quot;, ylabel=&quot;y&quot;,
-         size=(300,300), lims=(0,dim), ticks=(ticks,ticklabels))</code></pre><img src="b0d3b4b1.svg" alt="Example block output"/><p>Compute and plot the composite relation.</p><pre><code class="language-julia hljs">W, X, Y, Z = Ob(FreeBicategoryRelations, &quot;w&quot;, &quot;x&quot;, &quot;y&quot;, &quot;z&quot;)
+         size=(300,300), lims=(0,dim), ticks=(ticks,ticklabels))</code></pre><img src="16a12441.svg" alt="Example block output"/><p>Compute and plot the composite relation.</p><pre><code class="language-julia hljs">W, X, Y, Z = Ob(FreeBicategoryRelations, &quot;w&quot;, &quot;x&quot;, &quot;y&quot;, &quot;z&quot;)
 R1 = Hom(&quot;R_1&quot;, X, Z)
 R2 = Hom(&quot;R_2&quot;, W, Y)
 R3 = Hom(&quot;R_3&quot;, X, Y)
@@ -42,7 +42,7 @@ composite_mat = functor((FinRel, FinRelation), composite, generators=Dict(
 ))
 
 plot_rel(composite_mat.rel, title=&quot;Result&quot;, xlabel=&quot;w&quot;, ylabel=&quot;z&quot;,
-         size=(300,300), lims=(0,dim), ticks=(ticks,ticklabels))</code></pre><img src="add4f391.svg" alt="Example block output"/><h2 id="Example-2.4.2"><a class="docs-heading-anchor" href="#Example-2.4.2">Example 2.4.2</a><a id="Example-2.4.2-1"></a><a class="docs-heading-anchor-permalink" href="#Example-2.4.2" title="Permalink"></a></h2><p class="math-container">\[\begin{aligned}
+         size=(300,300), lims=(0,dim), ticks=(ticks,ticklabels))</code></pre><img src="e7b169a9.svg" alt="Example block output"/><h2 id="Example-2.4.2"><a class="docs-heading-anchor" href="#Example-2.4.2">Example 2.4.2</a><a id="Example-2.4.2-1"></a><a class="docs-heading-anchor-permalink" href="#Example-2.4.2" title="Permalink"></a></h2><p class="math-container">\[\begin{aligned}
    R_1(w; y,x) &amp;\iff \tan(y+w) + \exp(x) = 2 \\
    R_2(x,v; y) &amp;\iff x^3 + \cos(\log(y^2)) = 1.5v \\
    R_3(w; v,z) &amp;\iff w + z + 10^{-1} v = 0.5
@@ -51,4 +51,4 @@ R1 = Hom(&quot;R_1&quot;, W, Y⊗X)
 R2 = Hom(&quot;R_2&quot;, X⊗V, Y)
 R3 = Hom(&quot;R_3&quot;, W, V⊗Z)
 
-composite = mcopy(W)⋅(R1 ⊗ R3)⋅(id(Y) ⊗ R2 ⊗ delete(Z))⋅mmerge(Y)</code></pre><p class="math-container">\[\Delta_{w} \cdot \left(R_1 \otimes R_3\right) \cdot \left(\mathrm{id}_{y} \otimes R_2 \otimes \lozenge_{z}\right) \cdot \nabla_{y} : w \to y\]</p><pre><code class="language-julia hljs">to_tikz(composite, orientation=LeftToRight, labels=true)</code></pre><img src="69c15db8.svg" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../pixel_matrix_simple_example/">« Pixel matrices: simple example</a><a class="docs-footer-nextpage" href="../pixel_array_example/">Pixel arrays: higher-order example »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.2.1 on <span class="colophon-date" title="Saturday 16 December 2023 21:25">Saturday 16 December 2023</span>. Using Julia version 1.9.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+composite = mcopy(W)⋅(R1 ⊗ R3)⋅(id(Y) ⊗ R2 ⊗ delete(Z))⋅mmerge(Y)</code></pre><p class="math-container">\[\Delta_{w} \cdot \left(R_1 \otimes R_3\right) \cdot \left(\mathrm{id}_{y} \otimes R_2 \otimes \lozenge_{z}\right) \cdot \nabla_{y} : w \to y\]</p><pre><code class="language-julia hljs">to_tikz(composite, orientation=LeftToRight, labels=true)</code></pre><img src="fe9c0ec3.svg" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../pixel_matrix_simple_example/">« Pixel matrices: simple example</a><a class="docs-footer-nextpage" href="../pixel_array_example/">Pixel arrays: higher-order example »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.2.1 on <span class="colophon-date" title="Saturday 16 December 2023 22:54">Saturday 16 December 2023</span>. Using Julia version 1.9.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
