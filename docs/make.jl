@@ -42,6 +42,7 @@ makedocs(
   pages=Any[
     "CategoricalTensorNetworks.jl"=>"index.md",
     "Examples"=>Any[
+      "generated/pixel_matrix_simple_example.md",
     ],
     "Library Reference"=>"api.md",
   ]
