@@ -43,6 +43,7 @@ makedocs(
     "CategoricalTensorNetworks.jl"=>"index.md",
     "Examples"=>Any[
       "generated/pixel_matrix_simple_example.md",
+      "generated/pixel_matrix_more_examples.md",
     ],
     "Library Reference"=>"api.md",
   ]
