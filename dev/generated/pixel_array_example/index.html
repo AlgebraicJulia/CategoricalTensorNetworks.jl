@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Pixel arrays: higher-order example · CategoricalTensorNetworks.jl</title><meta name="title" content="Pixel arrays: higher-order example · CategoricalTensorNetworks.jl"/><meta property="og:title" content="Pixel arrays: higher-order example · CategoricalTensorNetworks.jl"/><meta property="twitter:title" content="Pixel arrays: higher-order example · CategoricalTensorNetworks.jl"/><meta name="description" content="Documentation for CategoricalTensorNetworks.jl."/><meta property="og:description" content="Documentation for CategoricalTensorNetworks.jl."/><meta property="twitter:description" content="Documentation for CategoricalTensorNetworks.jl."/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">CategoricalTensorNetworks.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">CategoricalTensorNetworks.jl</a></li><li><span class="tocitem">Examples</span><ul><li><a class="tocitem" href="../pixel_matrix_simple_example/">Pixel matrices: simple example</a></li><li><a class="tocitem" href="../pixel_matrix_more_examples/">Pixel matrices: more examples</a></li><li class="is-active"><a class="tocitem" href>Pixel arrays: higher-order example</a></li></ul></li><li><a class="tocitem" href="../../api/">Library Reference</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href>Pixel arrays: higher-order example</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Pixel arrays: higher-order example</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/AlgebraicJulia/CategoricalTensorNetworks.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/AlgebraicJulia/CategoricalTensorNetworks.jl/blob/main/docs/literate/pixel_array_example.jl" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Pixel-arrays:-higher-order-example"><a class="docs-heading-anchor" href="#Pixel-arrays:-higher-order-example">Pixel arrays: higher-order example</a><a id="Pixel-arrays:-higher-order-example-1"></a><a class="docs-heading-anchor-permalink" href="#Pixel-arrays:-higher-order-example" title="Permalink"></a></h1><p>This notebook reproduces Exampe 2.4.2 from the pixel arrays paper (<a href="https://arxiv.org/abs/1609.00061">arXiv:1609.00061</a>).</p><pre><code class="language-julia hljs">using Catlab, Catlab.CategoricalAlgebra.FinRelations
+using CategoricalTensorNetworks
+
+using Tullio</code></pre><p>Base relations:</p><p class="math-container">\[\begin{aligned}
+   R_1(w; y,x) &amp;\iff \tan(y+w) + \exp(x) = 2 \\
+   R_2(x,v; y) &amp;\iff x^3 + \cos(\log(y^2)) = 1.5v \\
+   R_3(w; v,z) &amp;\iff w + z + 10^{-1} v = 0.5
+\end{aligned}\]</p><p>Create the pixel arrays.</p><pre><code class="language-julia hljs">n = 80
+v = x = z = range(-3, 3, length=n)
+w = y = range(-2.5, 2.5, length=n)
+ϵ = 0.1
+
+@tullio R1[i,j,k] := BoolRig(abs(tan(y[k] + w[i]) + exp(x[j]) - 2) &lt; ϵ)
+@tullio R2[i,j,k] := BoolRig(abs(x[j]^3 + cos(log(y[k]^2)) - 1.5v[i]) &lt; ϵ)
+@tullio R3[i,j,k] := BoolRig(abs(w[j] + z[k] + v[i]/10 - 0.5) &lt; ϵ)
+
+size(R1)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(80, 80, 80)</code></pre><p>Create undirected wiring diagram for relational composition.</p><pre><code class="language-julia hljs">diagram = @relation (w,y) where (v,w,x,y,z) begin
+  R1(w,x,y)
+  R2(v,x,y)
+  R3(v,w,z)
+end
+
+to_graphviz(diagram, box_labels=:name, junction_labels=:variable,
+            port_labels=false)</code></pre><img src='data:image/svg+xml;utf-8,<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="148pt" height="177pt"
+ viewBox="0.00 0.00 148.36 177.24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 173.24)">
+<title>G</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-173.24 144.36,-173.24 144.36,4 -4,4"/>
+<!-- n1 -->
+<g id="box1" class="node">
+<title>n1</title>
+<ellipse fill="none" stroke="black" cx="58.77" cy="-114.28" rx="18" ry="18"/>
+<text text-anchor="middle" x="58.77" y="-110.58" font-family="Serif" font-size="14.00">R1</text>
+</g>
+<!-- n7 -->
+<!-- junction -->
+<g id="junction2" class="node">
+<title>n7</title>
+<ellipse fill="black" stroke="black" cx="39.9" cy="-75.62" rx="2.5" ry="2.5"/>
+<text text-anchor="middle" x="30.9" y="-81.92" font-family="Serif" font-size="14.00">w</text>
+</g>
+<!-- n1&%2345;&%2345;n7 -->
+<g id="edge3" class="edge">
+<title>n1&%2345;&%2345;n7</title>
+<path fill="none" stroke="black" d="M50.66,-97.66C46.98,-90.13 43.04,-82.04 41.11,-78.08"/>
+</g>
+<!-- n8 -->
+<!-- junction -->
+<g id="junction3" class="node">
+<title>n8</title>
+<ellipse fill="black" stroke="black" cx="90.96" cy="-101.47" rx="2.5" ry="2.5"/>
+<text text-anchor="middle" x="83.96" y="-107.77" font-family="Serif" font-size="14.00">x</text>
+</g>
+<!-- n1&%2345;&%2345;n8 -->
+<g id="edge6" class="edge">
+<title>n1&%2345;&%2345;n8</title>
+<path fill="none" stroke="black" d="M75.62,-107.57C80.73,-105.54 85.74,-103.55 88.58,-102.42"/>
+</g>
+<!-- n9 -->
+<!-- junction -->
+<g id="junction4" class="node">
+<title>n9</title>
+<ellipse fill="black" stroke="black" cx="98.33" cy="-131.73" rx="2.5" ry="2.5"/>
+<text text-anchor="middle" x="91.33" y="-138.03" font-family="Serif" font-size="14.00">y</text>
+</g>
+<!-- n1&%2345;&%2345;n9 -->
+<g id="edge8" class="edge">
+<title>n1&%2345;&%2345;n9</title>
+<path fill="none" stroke="black" d="M75.31,-121.58C83.28,-125.09 91.96,-128.92 96.01,-130.71"/>
+</g>
+<!-- n2 -->
+<g id="box2" class="node">
+<title>n2</title>
+<ellipse fill="none" stroke="black" cx="122.36" cy="-93.83" rx="18" ry="18"/>
+<text text-anchor="middle" x="122.36" y="-90.13" font-family="Serif" font-size="14.00">R2</text>
+</g>
+<!-- n6 -->
+<!-- junction -->
+<g id="junction1" class="node">
+<title>n6</title>
+<ellipse fill="black" stroke="black" cx="106.92" cy="-53.31" rx="2.5" ry="2.5"/>
+<text text-anchor="middle" x="99.92" y="-59.61" font-family="Serif" font-size="14.00">v</text>
+</g>
+<!-- n2&%2345;&%2345;n6 -->
+<g id="edge1" class="edge">
+<title>n2&%2345;&%2345;n6</title>
+<path fill="none" stroke="black" d="M115.9,-76.88C112.8,-68.73 109.41,-59.84 107.83,-55.69"/>
+</g>
+<!-- n2&%2345;&%2345;n8 -->
+<g id="edge7" class="edge">
+<title>n2&%2345;&%2345;n8</title>
+<path fill="none" stroke="black" d="M104.82,-98.1C100.33,-99.19 96.04,-100.23 93.45,-100.86"/>
+</g>
+<!-- n2&%2345;&%2345;n9 -->
+<g id="edge9" class="edge">
+<title>n2&%2345;&%2345;n9</title>
+<path fill="none" stroke="black" d="M112.59,-109.24C107.7,-116.95 102.3,-125.47 99.78,-129.45"/>
+</g>
+<!-- n3 -->
+<g id="box3" class="node">
+<title>n3</title>
+<ellipse fill="none" stroke="black" cx="65.63" cy="-41.09" rx="18" ry="18"/>
+<text text-anchor="middle" x="65.63" y="-37.39" font-family="Serif" font-size="14.00">R3</text>
+</g>
+<!-- n3&%2345;&%2345;n6 -->
+<g id="edge2" class="edge">
+<title>n3&%2345;&%2345;n6</title>
+<path fill="none" stroke="black" d="M82.9,-46.2C91.21,-48.66 100.27,-51.34 104.5,-52.59"/>
+</g>
+<!-- n3&%2345;&%2345;n7 -->
+<g id="edge4" class="edge">
+<title>n3&%2345;&%2345;n7</title>
+<path fill="none" stroke="black" d="M54.87,-55.54C49.8,-62.34 44.29,-69.74 41.59,-73.36"/>
+</g>
+<!-- n10 -->
+<!-- junction -->
+<g id="junction5" class="node">
+<title>n10</title>
+<ellipse fill="black" stroke="black" cx="58.94" cy="-2.5" rx="2.5" ry="2.5"/>
+<text text-anchor="middle" x="52.44" y="-8.8" font-family="Serif" font-size="14.00">z</text>
+</g>
+<!-- n3&%2345;&%2345;n10 -->
+<g id="edge11" class="edge">
+<title>n3&%2345;&%2345;n10</title>
+<path fill="none" stroke="black" d="M62.52,-23.15C61.32,-16.22 60.08,-9.06 59.42,-5.26"/>
+</g>
+<!-- n4 -->
+<!-- n4&%2345;&%2345;n7 -->
+<g id="edge5" class="edge">
+<title>n4&%2345;&%2345;n7</title>
+<path fill="none" stroke="black" d="M1.18,-77.04C5.52,-76.88 29.23,-76.01 37.25,-75.72"/>
+</g>
+<!-- n5 -->
+<!-- n5&%2345;&%2345;n9 -->
+<g id="edge10" class="edge">
+<title>n5&%2345;&%2345;n9</title>
+<path fill="none" stroke="black" d="M108.11,-167.83C106.83,-163.11 100.96,-141.45 98.98,-134.15"/>
+</g>
+</g>
+</svg>
+'/><p>This diagram corresponds to the tensor contraction expression:</p><pre><code class="language-julia hljs">gen_tensor_notation(diagram)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">:(out[w, y] = R1[w, x, y] * R2[v, x, y] * R3[v, w, z])</code></pre><p>Evaluate this tensor network using <a href="https://github.com/mcabbott/Tullio.jl">Tullio.jl</a>.</p><pre><code class="language-julia hljs">R = @contract_tensors_with diagram @tullio;</code></pre><p>Plot the result.</p><pre><code class="language-julia hljs">using Plots
+
+plot_rel(m::AbstractMatrix{BoolRig}; kw...) =
+  plot(spy(map(x -&gt; x.value, m)); kw...)
+
+ticks = range(1, n, length=5)
+ticklabels = range(minimum(w), maximum(w), length=length(ticks))
+plot_rel(R, title=&quot;Composite relation&quot;, xlabel=&quot;y&quot;, ylabel=&quot;w&quot;,
+         size=(300,300), lims=(0,n), ticks=(ticks,ticklabels))</code></pre><img src="ae8c456f.svg" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../pixel_matrix_more_examples/">« Pixel matrices: more examples</a><a class="docs-footer-nextpage" href="../../api/">Library Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.2.1 on <span class="colophon-date" title="Saturday 16 December 2023 21:22">Saturday 16 December 2023</span>. Using Julia version 1.9.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
