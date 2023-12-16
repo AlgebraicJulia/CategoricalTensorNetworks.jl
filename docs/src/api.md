@@ -1,5 +1,8 @@
 # Library Reference
 
 ```@autodocs
-Modules = [CategoricalTensorNetworks]
+Modules = [
+  CategoricalTensorNetworks.TensorNetworkAlgebras,
+  CategoricalTensorNetworks.ScheduleUWDs,
+]
 ```

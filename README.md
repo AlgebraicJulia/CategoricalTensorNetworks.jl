@@ -5,8 +5,8 @@
 [![Code Coverage](https://codecov.io/gh/AlgebraicJulia/CategoricalTensorNetworks.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/AlgebraicJulia/CategoricalTensorNetworks.jl)
 [![CI/CD](https://github.com/AlgebraicJulia/CategoricalTensorNetworks.jl/actions/workflows/julia_ci.yml/badge.svg)](https://github.com/AlgebraicJulia/CategoricalTensorNetworks.jl/actions/workflows/julia_ci.yml)
 
-Tensor networks from a categorical point of view, specifically as algebras of
-the operad of the undirected wiring diagrams.
+A Julia package for tensor networks from a categorical point of view. Tensor
+networks are viewed as algebras of the operad of the undirected wiring diagrams.
 
 **Warning**: This repository consists of experimental code plus a few
 illustrative examples. It is not ready for serious use but, with some additional
