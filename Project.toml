@@ -12,6 +12,7 @@ Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 
 [compat]
 Catlab = "^0.16.4"
+DataStructures = "0.18"
 MLStyle = "0.4"
 Reexport = "1"
 julia = "1.9"
