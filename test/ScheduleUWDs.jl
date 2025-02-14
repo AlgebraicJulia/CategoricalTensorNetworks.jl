@@ -29,7 +29,7 @@ matrices = map(randn, [(3,4), (4,5), (5,6), (6,7)])
 out = eval_schedule(nd, matrices)
 @test out ≈ foldr(*, matrices)
 
-s = schedule(d, JunctionTreesSchedule())
+s = schedule(d, CliqueTreesSchedule())
 out = eval_schedule(s, matrices)
 @test out ≈ foldr(*, matrices)
 
@@ -48,7 +48,7 @@ matrices = map(randn, [(10,5), (5,5), (5,5), (5,10)])
 out = eval_schedule(nd, matrices)
 @test out[] ≈ tr(foldl(*, matrices))
 
-s = schedule(d, JunctionTreesSchedule())
+s = schedule(d, CliqueTreesSchedule())
 out = eval_schedule(s, matrices)
 @test out[] ≈ tr(foldl(*, matrices))
 
@@ -64,7 +64,7 @@ A, B = randn((3,4)), randn((5,6))
 out = eval_schedule(s, [A, B])
 @test out ≈ (reshape(A, (3,4,1,1)) .* reshape(B, (1,1,5,6)))
 
-s = schedule(d, JunctionTreesSchedule())
+s = schedule(d, CliqueTreesSchedule())
 out = eval_schedule(s, [A, B])
 @test out ≈ (reshape(A, (3,4,1,1)) .* reshape(B, (1,1,5,6)))
 
@@ -80,7 +80,7 @@ A, B = randn((5,5)), randn((5,5))
 out = eval_schedule(s, [A, B])
 @test out[] ≈ dot(vec(A), vec(B))
 
-s = schedule(d, JunctionTreesSchedule())
+s = schedule(d, CliqueTreesSchedule())
 out = eval_schedule(s, [A, B])
 @test out[] ≈ dot(vec(A), vec(B))
 

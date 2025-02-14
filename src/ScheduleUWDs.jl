@@ -6,7 +6,7 @@ composites of morphisms in hypergraph categories.
 module ScheduleUWDs
 
 export AbstractNestedUWD, AbstractScheduledUWD, NestedUWD, ScheduledUWD,
-  SchedulingAlgorithm, SequentialSchedule, JunctionTreesSchedule,
+  SchedulingAlgorithm, SequentialSchedule, CliqueTreesSchedule,
   eval_schedule, to_nested_diagram, schedule
 
 import Base: schedule
@@ -216,14 +216,14 @@ according to the order of their IDs, which is arbitrary.
 struct SequentialSchedule <: SchedulingAlgorithm end
 
 
-""" Schedule a diagram using the tree decomposition library JunctionTrees.jl.
+""" Schedule a diagram using the tree decomposition library CliqueTrees.jl.
 
 This algorithm works by computing a tree decomposition of the diagram's dual graph.
 The user can pass the following parameters as keyword arguments to `schedule`.
 - `ealg`: algorithm for computing a fill-reducing permutation of the graph's vertices
 - `snd`: type of supernode partition
 """
-struct JunctionTreesSchedule <: SchedulingAlgorithm end
+struct CliqueTreesSchedule <: SchedulingAlgorithm end
 
 
 """ Schedule an undirected wiring diagram.
@@ -252,7 +252,7 @@ function schedule(d::AbstractUWD, ::SequentialSchedule;
   schedule
 end
 
-function schedule(diagram::AbstractUWD, ::JunctionTreesSchedule;
+function schedule(diagram::AbstractUWD, ::CliqueTreesSchedule;
                   ealg::PermutationOrAlgorithm=DEFAULT_ELIMINATION_ALGORITHM,
                   snd::SupernodeType=DEFAULT_SUPERNODE_TYPE)
     # construct supernodal elimination tree
