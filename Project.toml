@@ -5,14 +5,20 @@ authors = ["Evan Patterson <evan@epatters.org>"]
 version = "0.0.1"
 
 [deps]
+AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
 Catlab = "134e5e36-593f-5add-ad60-77f754baafbe"
+CliqueTrees = "60701a23-6482-424a-84db-faee86b9b1f8"
 DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 MLStyle = "d8e11817-5142-5d16-987a-aa16d5891078"
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
+SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 
 [compat]
+AbstractTrees = "0.4.5"
 Catlab = "^0.16.4"
+CliqueTrees = "0.2.1"
 DataStructures = "0.18"
 MLStyle = "0.4"
 Reexport = "1"
+SparseArrays = "1.11.0"
 julia = "1.9"

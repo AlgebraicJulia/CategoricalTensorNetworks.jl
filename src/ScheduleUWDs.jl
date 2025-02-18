@@ -4,15 +4,21 @@ In category-theoretic terms, this module is about evaluating arbitrary
 composites of morphisms in hypergraph categories.
 """
 module ScheduleUWDs
+
 export AbstractNestedUWD, AbstractScheduledUWD, NestedUWD, ScheduledUWD,
-  SchedulingAlgorithm, SequentialSchedule,
+  SchedulingAlgorithm, SequentialSchedule, CliqueTreesSchedule,
   eval_schedule, to_nested_diagram, schedule
 
 import Base: schedule
-using DataStructures: IntDisjointSets, union!, in_same_set
+import Base.Iterators
 
+using AbstractTrees
+using DataStructures: IntDisjointSets, union!, in_same_set
 using Catlab.CategoricalAlgebra, Catlab.WiringDiagrams
 using Catlab.WiringDiagrams.UndirectedWiringDiagrams: flat
+using CliqueTrees: PermutationOrAlgorithm, SupernodeType, Tree, DEFAULT_ELIMINATION_ALGORITHM, DEFAULT_SUPERNODE_TYPE, supernodetree, setrootindex!
+using SparseArrays
+
 
 # Data types
 ############
@@ -209,6 +215,17 @@ according to the order of their IDs, which is arbitrary.
 """
 struct SequentialSchedule <: SchedulingAlgorithm end
 
+
+""" Schedule a diagram using the tree decomposition library CliqueTrees.jl.
+
+This algorithm works by computing a tree decomposition of the diagram's dual graph.
+The user can pass the following parameters as keyword arguments to `schedule`.
+- `ealg`: algorithm for computing a fill-reducing permutation of the graph's vertices
+- `snd`: type of supernode partition
+"""
+struct CliqueTreesSchedule <: SchedulingAlgorithm end
+
+
 """ Schedule an undirected wiring diagram.
 
 By default, a simple sequential schedule is used.
@@ -233,6 +250,87 @@ function schedule(d::AbstractUWD, ::SequentialSchedule;
   set_subpart!(schedule, order[1:min(2,nb)], :box_parent, 1)
   set_subpart!(schedule, order[3:nb], :box_parent, 2:nc)
   schedule
+end
+
+function schedule(diagram::AbstractUWD, ::CliqueTreesSchedule;
+                  ealg::PermutationOrAlgorithm=DEFAULT_ELIMINATION_ALGORITHM,
+                  snd::SupernodeType=DEFAULT_SUPERNODE_TYPE)
+    # construct supernodal elimination tree
+    label, stree = supernodetree(dualgraph(diagram); alg=ealg, snd)
+    
+    # assign boxes to supernodes
+    assignment = fill(length(stree), nboxes(diagram))
+    root = length(stree)
+
+    for (i, residual) in Iterators.reverse(enumerate(stree))
+        for j in @view label[residual]
+            for p in ports_with_junction(diagram, j)::Vector{Int} # type instability
+                b = box(diagram, p)
+                assignment[b] = i
+            end
+
+            for p in ports_with_junction(diagram, j; outer=true)::Vector{Int} # type instability
+                root = i
+            end
+        end
+    end
+
+    # construct schedule
+    tree = setrootindex!(Tree(stree), root)
+    schedule = ScheduledUWD()
+    copy_parts!(schedule, diagram)
+    add_parts!(schedule, :Composite, length(tree))
+
+    for i in tree
+        j = parentindex(tree, i)
+
+        if isnothing(j)
+            set_subpart!(schedule, i, :parent, i)
+        else
+            set_subpart!(schedule, i, :parent, j)
+        end
+    end
+
+    for (b, i) in enumerate(assignment)
+        set_subpart!(schedule, b, :box_parent, i)
+    end
+
+    schedule
+end
+
+# Construct the dual graph of an undirected wiring diagram.
+function dualgraph(diagram::AbstractUWD)
+    source = Int[]
+    target = Int[]
+    
+    for p in ports(diagram)
+        b = box(diagram, p)
+        i = junction(diagram, p)::Int # type instability
+        
+        for q in ports(diagram, b)
+            j = junction(diagram, q)::Int # type instability
+                
+            if i != j
+                push!(source, i)
+                push!(target, j)
+            end
+        end
+    end
+    
+    for p in ports(diagram; outer=true)
+        i = junction(diagram, p; outer=true)::Int # type instability
+        
+        for q in ports(diagram; outer=true)
+            j = junction(diagram, q; outer=true)::Int # type instability
+            
+            if i != j
+                push!(source, i)
+                push!(target, j)
+            end
+        end
+    end
+    
+    sparse(source, target, ones(Bool, length(source)), njunctions(diagram), njunctions(diagram))
 end
 
 end
